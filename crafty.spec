@@ -18,8 +18,10 @@ Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}.doc.ascii
 Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
 # Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Patch0:		%{name}-paths.patch
+Patch1:		%{name}-Makefile.patch
 Provides:	chessprogram
 ExcludeArch:	axp
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Crafty is a Unix chess program, distributed as source by its author,
@@ -28,7 +30,8 @@ beats GNU Chess on the same hardware.
 
 %prep
 %setup -q -c -T -a 0
-%patch -p0
+%patch0 -p0
+%patch1 -p0
 cd %{name}-%{version}
 cp %{SOURCE2} README
 cp %{SOURCE1} .
@@ -39,18 +42,22 @@ gzip -d start.pgn.gz
 %build
 cd %{name}-%{version}
 %{__make} linux-elf
-mkdir -p %{_prefix}/lib/games/crafty
-touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
-./crafty << _END_
-books create start.pgn 60
-quit
-_END_
+#mkdir -p %{_prefix}/lib/games/crafty
+#touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
+#./crafty << _END_
+#books create start.pgn 60
+#quit
+#_END_
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d %{_prefix}/lib/games/crafty
-install -m 02755 -g games crafty %{_bindir}/crafty
-install -m 0644 -g games books.bin %{_prefix}/lib/games/crafty/books.bin
+cd %{name}-%{version}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty}
+install crafty $RPM_BUILD_ROOT%{_bindir}
+#install books.bin $RPM_BUILD_ROOT%{_libdir}/games/crafty
+#install -d %{_prefix}/lib/games/crafty
+#install -m 02755 -g games crafty %{_bindir}/crafty
+#install -m 0644 -g games books.bin %{_prefix}/lib/games/crafty/books.bin
 
 %post
 touch /usr/lib/games/crafty/book.lrn /usr/lib/games/crafty/position.{bin,lrn}
@@ -64,10 +71,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc crafty.faq
-%doc crafty.doc.ascii
-%doc crafty.doc.ps
-%doc README
+%doc %{name}-%{version}/{crafty.faq,crafty.doc.ascii,crafty.doc.ps,README}
 %dir %{_prefix}/lib/games/crafty
 %attr(755,root,root) %{_bindir}/crafty
-%{_prefix}/lib/games/crafty/books.bin
+#%{_prefix}/lib/games/crafty/books.bin
