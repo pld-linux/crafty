@@ -28,13 +28,16 @@ beats GNU Chess on the same hardware.
 
 %prep
 %setup -q -c -T -a 0
-%patch -p1
-cp ${SOURCE2} README
-cp ${SOURCE1} .
-cp ${SOURCE4} ${SOURCE5} .
-cp ${SOURCE3} . ; gzip -d start.pgn.gz
+%patch -p0
+cd %{name}-%{version}
+cp %{SOURCE2} README
+cp %{SOURCE1} .
+cp %{SOURCE4} %{SOURCE5} .
+cp %{SOURCE3} . 
+gzip -d start.pgn.gz
 
 %build
+cd %{name}-%{version}
 %{__make} linux-elf
 mkdir -p %{_prefix}/lib/games/crafty
 touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
