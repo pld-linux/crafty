@@ -8,13 +8,13 @@ Icon:		xchess.gif
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}-%{version}.tar.gz
 # Source0-md5:	439b591eb48957ce50bfd31f9bada8fb
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/%{name}.faq
-# Source1-md5:	f744727e291b6dec7e7c69bb3586b6dd
+# NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
 Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/read.me
-# Source2-md5:	ce9a5e014d23f36c2540628ba0dc1c0b
+# NoSource2-md5: ce9a5e014d23f36c2540628ba0dc1c0b
 Source3:	ftp://ftp.cis.uab.edu/pub/hyatt/common/start.pgn.gz
 # Source3-md5:	c3c54b29351408298e3c7548f4faed93
 Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}.doc.ascii
-# Source4-md5:	5fd73027a1de1674763562e1987197ba
+# NoSource4-md5: 5fd73027a1de1674763562e1987197ba
 Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
 # Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Patch0:		%{name}-paths.patch
