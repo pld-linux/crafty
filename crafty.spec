@@ -1,4 +1,3 @@
-# TODO: optflags, disable x86 assembly on !x86 (if possible)
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
@@ -21,8 +20,11 @@ Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
 Icon:		xchess.gif
+BuildRequires:	libstdc++-devel
 Provides:	chessprogram
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		specflags	-fomit-frame-pointer
 
 %description
 Crafty is a Unix chess program, distributed as source by its author,
@@ -35,19 +37,37 @@ Crafty to uniksowy program szachowy rozpowszechniany w postaci
 czêsto wygrywa z GNU Chess na tym samym sprzêcie.
 
 %prep
-%setup -q -c
-%patch0 -p0
-%patch1 -p0
-cd %{name}-%{version}
+%setup -q
+%patch0 -p1
+%patch1 -p1
 cp %{SOURCE2} README
 cp %{SOURCE1} .
 cp %{SOURCE4} %{SOURCE5} .
 cp %{SOURCE3} . 
 gzip -d start.pgn.gz
 
+%{__perl} -pi -e 's@.*machine/builtins.*@@' chess.h
+
 %build
-cd %{name}-%{version}
-%{__make} linux-elf
+asmobj=""
+optarch=""
+target="LINUX"
+%ifarch %{ix86}
+optarch="-DUSE_ASSEMBLY_A -DUSE_ASSEMBLY_B"
+asmobj="X86-elf.o"
+%endif
+%ifarch alpha
+target="ALPHA"
+%endif
+%{__make} crafty-make \
+	target="$target" \
+	CC="%{__cc}" \
+	CXX="%{__cxx}" \
+	CFLAGS="%{rpmcflags} -Wall -pipe -D_REENTRANT" \
+	LDFLAGS="%{rpmldflags} -lpthread" \
+	opt="-DCOMPACT_ATTACKS -DUSE_ATTACK_FUNCTIONS $optarch -DFAST" \
+	asm="$asmobj"
+	
 #mkdir -p %{_prefix}/lib/games/crafty
 #touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
 #./crafty << _END_
@@ -57,7 +77,6 @@ cd %{name}-%{version}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-cd %{name}-%{version}
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty}
 install crafty $RPM_BUILD_ROOT%{_bindir}
 #install books.bin $RPM_BUILD_ROOT%{_libdir}/games/crafty
@@ -76,7 +95,7 @@ chmod g+w /usr/lib/games/crafty/book.lrn \
 
 %files
 %defattr(644,root,root,755)
-%doc %{name}-%{version}/{crafty.faq,crafty.doc.ascii,crafty.doc.ps,README}
+%doc crafty.faq crafty.doc.ascii crafty.doc.ps README
 %attr(755,root,root) %{_bindir}/crafty
 %dir %{_libdir}/games/crafty
 #%{_libdir}/games/crafty/books.bin
