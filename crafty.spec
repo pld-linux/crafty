@@ -1,10 +1,11 @@
+# TODO: optflags, disable x86 assembly on !x86 (if possible)
+Summary:	Superior chess program by Bob Hyatt for Unix systems
+Summary(pl):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
 Version:	18.9
 Release:	2
 License:	GPL
 Group:		Applications/Games
-Summary:	Superior chess program by Bob Hyatt for Unix systems.
-Icon:		xchess.gif
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}-%{version}.tar.gz
 # Source0-md5:	4cae4e95fb86421c6626baefadbff18f
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/%{name}.faq
@@ -19,8 +20,8 @@ Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
 # Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
+Icon:		xchess.gif
 Provides:	chessprogram
-ExcludeArch:	axp
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -28,8 +29,13 @@ Crafty is a Unix chess program, distributed as source by its author,
 Bob Hyatt. The program plays at about 2200 strength and frequently
 beats GNU Chess on the same hardware.
 
+%description -l pl
+Crafty to uniksowy program szachowy rozpowszechniany w postaci
+¼ród³owej przez autora - Boba Hyatta. Program gra z si³± oko³o 2200 i
+czêsto wygrywa z GNU Chess na tym samym sprzêcie.
+
 %prep
-%setup -q -c -T -a 0
+%setup -q -c
 %patch0 -p0
 %patch1 -p0
 cd %{name}-%{version}
@@ -55,9 +61,11 @@ cd %{name}-%{version}
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty}
 install crafty $RPM_BUILD_ROOT%{_bindir}
 #install books.bin $RPM_BUILD_ROOT%{_libdir}/games/crafty
-#install -d %{_prefix}/lib/games/crafty
-#install -m 02755 -g games crafty %{_bindir}/crafty
-#install -m 0644 -g games books.bin %{_prefix}/lib/games/crafty/books.bin
+#install -d %{_libdir}/games/crafty
+#install books.bin %{_libdir}/games/crafty/books.bin
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post
 touch /usr/lib/games/crafty/book.lrn /usr/lib/games/crafty/position.{bin,lrn}
@@ -66,12 +74,9 @@ chgrp games /usr/lib/games/crafty/book.lrn \
 chmod g+w /usr/lib/games/crafty/book.lrn \
         /usr/lib/games/crafty/position.{bin,lrn}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(644,root,root,755)
 %doc %{name}-%{version}/{crafty.faq,crafty.doc.ascii,crafty.doc.ps,README}
-%dir %{_prefix}/lib/games/crafty
 %attr(755,root,root) %{_bindir}/crafty
-#%{_prefix}/lib/games/crafty/books.bin
+%dir %{_libdir}/games/crafty
+#%{_libdir}/games/crafty/books.bin
