@@ -6,7 +6,7 @@ Group:		Applications/Games
 Summary:	Superior chess program by Bob Hyatt for Unix systems.
 Icon:		xchess.gif
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}-%{version}.tar.gz
-# Source0-md5:	439b591eb48957ce50bfd31f9bada8fb
+# Source0-md5:	4cae4e95fb86421c6626baefadbff18f
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/%{name}.faq
 # NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
 Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/read.me
