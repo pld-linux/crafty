@@ -17,9 +17,11 @@ Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}.doc.ascii
 # NoSource4-md5: 5fd73027a1de1674763562e1987197ba
 Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
 # Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
+Source6:	%{name}.desktop
+Source7:	xchess.png
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
-#Icon:		xchess.gif
+Icon:		xchess.gif
 BuildRequires:	libstdc++-devel
 Provides:	chessprogram
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -77,8 +79,10 @@ target="ALPHA"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty,%{_desktopdir},%{_pixmapsdir}}
 install crafty $RPM_BUILD_ROOT%{_bindir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE7} $RPM_BUILD_ROOT%{_pixmapsdir}
 #install books.bin $RPM_BUILD_ROOT%{_libdir}/games/crafty
 #install -d %{_libdir}/games/crafty
 #install books.bin %{_libdir}/games/crafty/books.bin
@@ -99,3 +103,5 @@ chmod g+w /usr/lib/games/crafty/book.lrn \
 %attr(755,root,root) %{_bindir}/crafty
 %dir %{_libdir}/games/crafty
 #%{_libdir}/games/crafty/books.bin
+%{_desktopdir}/*
+%{_pixmapsdir}/*
