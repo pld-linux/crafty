@@ -5,17 +5,19 @@ Version:	19.5
 Release:	1
 License:	GPL
 Group:		Applications/Games
-Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v19/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.tar.gz
 # Source0-md5:	390ed8badcd30d16361eef415d2dada7
-Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/%{name}.faq
+# two following originally from ftp://ftp.cis.uab.edu/pub/hyatt/
+Source1:	%{name}.faq
 # NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
-Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/read.me
+Source2:	read.me
 # NoSource2-md5: ce9a5e014d23f36c2540628ba0dc1c0b
-Source3:	ftp://ftp.cis.uab.edu/pub/hyatt/common/start.pgn.gz
+# now: ftp://ftp.cis.uab.edu/pub/hyatt/books/start.pgn
+Source3:	start.pgn.gz
 # Source3-md5:	c3c54b29351408298e3c7548f4faed93
-Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}.doc.ascii
+Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
 # NoSource4-md5: 5fd73027a1de1674763562e1987197ba
-Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/doc/%{name}.doc.ps
+Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
 # Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Source6:	%{name}.desktop
 Source7:	xchess.png
