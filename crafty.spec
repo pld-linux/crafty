@@ -1,12 +1,12 @@
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
-Version:	18.15
+Version:	19.5
 Release:	1
 License:	GPL
 Group:		Applications/Games
-Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v18/%{name}-%{version}.tar.gz
-# Source0-md5:	e98774ac9b515bb5487c1789f5e6af4c
+Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/v19/%{name}-%{version}.tar.gz
+# Source0-md5:	390ed8badcd30d16361eef415d2dada7
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/%{name}.faq
 # NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
 Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/read.me
@@ -39,7 +39,7 @@ Crafty to uniksowy program szachowy rozpowszechniany w postaci
 czêsto wygrywa z GNU Chess na tym samym sprzêcie.
 
 %prep
-%setup -q
+%setup -q -c
 %patch0 -p1
 %patch1 -p1
 cp %{SOURCE2} README
