@@ -1,0 +1,18 @@
+--- chess.h.orig	Tue Mar 27 11:10:52 2001
++++ chess.h	Mon Apr  2 01:27:45 2001
+@@ -190,13 +190,13 @@
+ #  endif
+ #else
+ #  if !defined(BOOKDIR)
+-#    define     BOOKDIR        "."
++#    define     BOOKDIR        "/usr/lib/games/crafty"
+ #  endif
+ #  if !defined(LOGDIR)
+ #    define      LOGDIR        "."
+ #  endif
+ #  if !defined(TBDIR)
+-#    define       TBDIR     "./TB"
++#    define       TBDIR     "/usr/games/lib/crafty/TB"
+ #  endif
+ #  if !defined(RCDIR)
+ #    define       RCDIR        "."
