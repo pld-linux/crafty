@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Crafty
+Comment=Superior chess program
+Comment[pl]=Jeden z lepszych programów szachowych
+Icon=xchess.png
+Exec=crafty
+Terminal=true
+Type=Application
+Categories=Game;BoardGame;
+Encoding=UTF-8
+# vi: encoding=utf-8
