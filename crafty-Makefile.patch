@@ -1,0 +1,12 @@
+diff -burN crafty-18.9.orig/Makefile crafty-18.9/Makefile
+--- crafty-18.9.orig/Makefile	2003-12-13 22:55:35.000000000 +0000
++++ crafty-18.9/Makefile	2003-12-13 22:55:57.000000000 +0000
+@@ -368,7 +368,7 @@
+ 		crafty
+ 
+ crafty:	$(objects) 
+-	$(CC) $(LDFLAGS) -o crafty $(objects) -lm  $(LIBS)
++	$(CXX) $(LDFLAGS) -o crafty $(objects) -lm  $(LIBS)
+ 	@rm -f X86-elf.S
+ 	@rm -f X86-aout.S
+ 
