@@ -95,7 +95,7 @@ touch /usr/lib/games/crafty/book.lrn /usr/lib/games/crafty/position.{bin,lrn}
 chgrp games /usr/lib/games/crafty/book.lrn \
 	/usr/lib/games/crafty/position.{bin,lrn}
 chmod g+w /usr/lib/games/crafty/book.lrn \
-        /usr/lib/games/crafty/position.{bin,lrn}
+	/usr/lib/games/crafty/position.{bin,lrn}
 
 %files
 %defattr(644,root,root,755)
