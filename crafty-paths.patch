@@ -1,0 +1,19 @@
+diff -urN crafty.orig/chess.h crafty-18.9/chess.h
+--- crafty.orig/chess.h	2001-07-26 16:58:01.000000000 +0200
++++ crafty-18.9/chess.h	2003-11-20 17:22:36.000000000 +0100
+@@ -190,13 +190,13 @@
+ #  endif
+ #else
+ #  if !defined(BOOKDIR)
+-#    define     BOOKDIR        "."
++#    define     BOOKDIR        "/usr/lib/games/crafty"
+ #  endif
+ #  if !defined(LOGDIR)
+ #    define      LOGDIR        "."
+ #  endif
+ #  if !defined(TBDIR)
+-#    define       TBDIR     "./TB"
++#    define       TBDIR     "/usr/games/lib/crafty/TB"
+ #  endif
+ #  if !defined(RCDIR)
+ #    define       RCDIR        "."
