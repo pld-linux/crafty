@@ -24,6 +24,7 @@ Source7:	xchess.png
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
 Icon:		xchess.gif
+URL:		http://www.limunltd.com/crafty/
 BuildRequires:	libstdc++-devel
 Provides:	chessprogram
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
