@@ -5,14 +5,15 @@ Version:	19.5
 Release:	1
 License:	GPL
 Group:		Applications/Games
-Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.tar.gz
+# new versions: ftp://ftp.cis.uab.edu/pub/hyatt/src/%{name}-%{version}.zip
+Source0:	ftp://ftp.cis.uab.edu/recovered/hyattsource/%{name}-%{version}.tar.gz
 # Source0-md5:	390ed8badcd30d16361eef415d2dada7
 # two following originally from ftp://ftp.cis.uab.edu/pub/hyatt/
 Source1:	%{name}.faq
 # NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
 Source2:	read.me
 # NoSource2-md5: ce9a5e014d23f36c2540628ba0dc1c0b
-# now: ftp://ftp.cis.uab.edu/pub/hyatt/books/start.pgn
+# now: ftp://ftp.cis.uab.edu/pub/hyatt/book/start.pgn
 Source3:	start.pgn.gz
 # Source3-md5:	c3c54b29351408298e3c7548f4faed93
 Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
