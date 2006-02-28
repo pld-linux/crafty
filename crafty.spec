@@ -48,7 +48,7 @@ czêsto wygrywa z GNU Chess na tym samym sprzêcie.
 cp %{SOURCE2} README
 cp %{SOURCE1} .
 cp %{SOURCE4} %{SOURCE5} .
-cp %{SOURCE3} . 
+cp %{SOURCE3} .
 gzip -d start.pgn.gz
 
 %{__perl} -pi -e 's@.*machine/builtins.*@@' chess.h
@@ -72,7 +72,7 @@ target="ALPHA"
 	LDFLAGS="%{rpmldflags} -lpthread" \
 	opt="-DCOMPACT_ATTACKS -DUSE_ATTACK_FUNCTIONS $optarch -DFAST" \
 	asm="$asmobj"
-	
+
 #mkdir -p %{_prefix}/lib/games/crafty
 #touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
 #./crafty << _END_
