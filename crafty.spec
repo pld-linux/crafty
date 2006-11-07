@@ -106,5 +106,5 @@ chmod g+w /usr/lib/games/crafty/book.lrn \
 %attr(755,root,root) %{_bindir}/crafty
 %dir %{_libdir}/games/crafty
 #%{_libdir}/games/crafty/books.bin
-%{_desktopdir}/*
+%{_desktopdir}/*.desktop
 %{_pixmapsdir}/*
