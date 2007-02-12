@@ -1,5 +1,5 @@
 Summary:	Superior chess program by Bob Hyatt for Unix systems
-Summary(pl.UTF-8):   Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
+Summary(pl.UTF-8):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
 Version:	19.5
 Release:	1
