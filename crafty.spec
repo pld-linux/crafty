@@ -1,10 +1,11 @@
 # TODO:
 # - update to 21.6
+# - executable should be sgid games?
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl.UTF-8):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
 Version:	20.1
-Release:	0.2
+Release:	1
 License:	GPL
 Group:		Applications/Games
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.zip
@@ -79,7 +80,7 @@ mv large_book.bin book.bin
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man6,%{_desktopdir},%{_pixmapsdir}} \
-	$RPM_BUILD_ROOT%{_datadir}/%{name}/{bitmaps,sound,tb}
+	$RPM_BUILD_ROOT{%{_datadir}/%{name}/{bitmaps,sound,tb},/var/lib/%{name}}
 
 install crafty $RPM_BUILD_ROOT%{_bindir}
 install xcrafty $RPM_BUILD_ROOT%{_bindir}
@@ -95,8 +96,12 @@ echo ".so crafty.6" > $RPM_BUILD_ROOT%{_mandir}/man6/xcrafty.6
 install %{SOURCE3} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-touch $RPM_BUILD_ROOT%{_datadir}/%{name}/book.lrn \
-	$RPM_BUILD_ROOT%{_datadir}/%{name}/position.{bin,lrn}
+touch $RPM_BUILD_ROOT/var/lib/%{name}/book.lrn \
+	$RPM_BUILD_ROOT/var/lib/%{name}/position.{bin,lrn}
+
+for file in book.lrn position.{bin,lrn}; do
+	ln -s /var/lib/%{name}/$file $RPM_BUILD_ROOT%{_datadir}/%{name}/$file
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -109,14 +114,16 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.bin
 %{_datadir}/%{name}/*.hlp
-%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/book.lrn
-%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/position.bin
-%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/position.lrn
+%{_datadir}/%{name}/*.lrn
 %dir %{_datadir}/%{name}/bitmaps
 %{_datadir}/%{name}/bitmaps/*.bm
 %{_datadir}/%{name}/bitmaps/*.gif
 %dir %{_datadir}/%{name}/tb
 %{_datadir}/%{name}/tb/*.emd
+%dir /var/lib/%{name}
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/book.lrn
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/position.bin
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/position.lrn
+%{_mandir}/man6/*.6*
 %{_desktopdir}/*.desktop
 %{_pixmapsdir}/*
-%{_mandir}/man6/*.6*
