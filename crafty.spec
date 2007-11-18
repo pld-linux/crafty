@@ -1,31 +1,30 @@
+# TODO:
+# - update to 21.6
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl.UTF-8):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
-Version:	19.5
-Release:	1
+Version:	20.1
+Release:	0.2
 License:	GPL
 Group:		Applications/Games
-Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.tar.gz
-# Source0-md5:	390ed8badcd30d16361eef415d2dada7
-# two following originally from ftp://ftp.cis.uab.edu/pub/hyatt/
-Source1:	%{name}.faq
-# NoSource1-md5: f744727e291b6dec7e7c69bb3586b6dd
-Source2:	read.me
-# NoSource2-md5: ce9a5e014d23f36c2540628ba0dc1c0b
-# now: ftp://ftp.cis.uab.edu/pub/hyatt/book/start.pgn
-Source3:	start.pgn.gz
-# Source3-md5:	c3c54b29351408298e3c7548f4faed93
-Source4:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
-# NoSource4-md5: 5fd73027a1de1674763562e1987197ba
-Source5:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
-# Source5-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
-Source6:	%{name}.desktop
-Source7:	xchess.png
+Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.zip
+# Source0-md5:	1d88571c150544c3ed25247127bfc5bd
+Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
+# NoSource1-md5:	5fd73027a1de1674763562e1987197ba
+Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
+# Source2-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
+Source3:	%{name}.desktop
+Source4:	xchess.png
+Source5:	%{name}-misc.tar.bz2
+Source6:	%{name}-bitmaps.tar.gz
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
+Patch2:		%{name}-MDK.patch
 URL:		http://www.limunltd.com/crafty/
 BuildRequires:	libstdc++-devel
 Provides:	chessprogram
+Provides:	chess_backend
+Suggests:	xboard
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags	-fomit-frame-pointer
@@ -41,14 +40,15 @@ Crafty to uniksowy program szachowy rozpowszechniany w postaci
 często wygrywa z GNU Chess na tym samym sprzęcie.
 
 %prep
-%setup -q -c
+%setup -q -a5 -a6
 %patch0 -p1
 %patch1 -p1
-cp %{SOURCE2} README
-cp %{SOURCE1} .
-cp %{SOURCE4} %{SOURCE5} .
-cp %{SOURCE3} .
-gzip -d start.pgn.gz
+%patch2 -p0
+mv doc/read.me README
+mv doc/* .
+mv bitmaps/README.bitmaps .
+rm -f bitmaps/gifs.tar
+cp %{SOURCE1} %{SOURCE2} .
 
 %{__perl} -pi -e 's@.*machine/builtins.*@@' chess.h
 
@@ -72,38 +72,51 @@ target="ALPHA"
 	opt="-DCOMPACT_ATTACKS -DUSE_ATTACK_FUNCTIONS $optarch -DFAST" \
 	asm="$asmobj"
 
-#mkdir -p %{_prefix}/lib/games/crafty
-#touch %{_prefix}/lib/games/crafty/book.lrn %{_prefix}/lib/games/crafty/position.{bin,lrn}
-#./crafty << _END_
-#books create start.pgn 60
-#quit
-#_END_
+sh make_books
+# use large opening book
+mv large_book.bin book.bin
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/games/crafty,%{_desktopdir},%{_pixmapsdir}}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man6,%{_desktopdir},%{_pixmapsdir}} \
+	$RPM_BUILD_ROOT%{_datadir}/%{name}/{bitmaps,sound,tb}
+
 install crafty $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE7} $RPM_BUILD_ROOT%{_pixmapsdir}
-#install books.bin $RPM_BUILD_ROOT%{_libdir}/games/crafty
-#install -d %{_libdir}/games/crafty
-#install books.bin %{_libdir}/games/crafty/books.bin
+install xcrafty $RPM_BUILD_ROOT%{_bindir}
+install speak $RPM_BUILD_ROOT%{_bindir}/crafty-speak
+
+install book.bin books.bin crafty.hlp $RPM_BUILD_ROOT%{_datadir}/%{name}
+install bitmaps/* $RPM_BUILD_ROOT%{_datadir}/%{name}/bitmaps
+install tb/*.emd $RPM_BUILD_ROOT%{_datadir}/%{name}/tb
+
+install crafty.6 $RPM_BUILD_ROOT%{_mandir}/man6
+echo ".so crafty.6" > $RPM_BUILD_ROOT%{_mandir}/man6/xcrafty.6
+
+install %{SOURCE3} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE4} $RPM_BUILD_ROOT%{_pixmapsdir}
+
+touch $RPM_BUILD_ROOT%{_datadir}/%{name}/book.lrn \
+	$RPM_BUILD_ROOT%{_datadir}/%{name}/position.{bin,lrn}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-touch /usr/lib/games/crafty/book.lrn /usr/lib/games/crafty/position.{bin,lrn}
-chgrp games /usr/lib/games/crafty/book.lrn \
-	/usr/lib/games/crafty/position.{bin,lrn}
-chmod g+w /usr/lib/games/crafty/book.lrn \
-	/usr/lib/games/crafty/position.{bin,lrn}
-
 %files
 %defattr(644,root,root,755)
-%doc crafty.faq crafty.doc.ascii crafty.doc.ps README
-%attr(755,root,root) %{_bindir}/crafty
-%dir %{_libdir}/games/crafty
-#%{_libdir}/games/crafty/books.bin
+%doc crafty.doc* crafty.faq README* small.txt start.pgn tournament.howto
+%attr(755,root,root) %{_bindir}/crafty*
+%attr(755,root,root) %{_bindir}/xcrafty
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*.bin
+%{_datadir}/%{name}/*.hlp
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/book.lrn
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/position.bin
+%attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/position.lrn
+%dir %{_datadir}/%{name}/bitmaps
+%{_datadir}/%{name}/bitmaps/*.bm
+%{_datadir}/%{name}/bitmaps/*.gif
+%dir %{_datadir}/%{name}/tb
+%{_datadir}/%{name}/tb/*.emd
 %{_desktopdir}/*.desktop
 %{_pixmapsdir}/*
+%{_mandir}/man6/*.6*
