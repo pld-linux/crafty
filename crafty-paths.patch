@@ -1,19 +1,29 @@
-diff -urN crafty.orig/chess.h crafty-18.9/chess.h
---- crafty.orig/chess.h	2001-07-26 16:58:01.000000000 +0200
-+++ crafty-18.9/chess.h	2003-11-20 17:22:36.000000000 +0100
-@@ -190,13 +190,13 @@
- #  endif
+--- ./chess.h.org	2007-11-18 11:40:45.390602131 +0100
++++ ./chess.h	2007-11-18 11:42:18.652054921 +0100
+@@ -131,7 +131,7 @@
+ #  define UNIX          /* system is unix-based                       */
+ #endif
+ #if !defined(BOOKDIR)
+-#  define     BOOKDIR        "."
++#  define     BOOKDIR        "/usr/share/crafty"
+ #endif
+ #if !defined(PERSDIR)
+ #  define     PERSDIR        "."
+@@ -140,7 +140,7 @@
+ #  define      LOGDIR        "."
+ #endif
+ #if !defined(TBDIR)
+-#  define       TBDIR     "./TB"
++#  define       TBDIR     "/usr/share/crafty/TB"
+ #endif
+ #if !defined(RCDIR)
+ #  define       RCDIR        "."
+@@ -1072,7 +1072,7 @@ extern void WinFreeInterleaved(void *, s
+ #  include "inlinex86.h"
+ #endif
+ #if defined(UNIX)
+-#  define SPEAK "./speak "
++#  define SPEAK "/usr/bin/crafty-speak "
  #else
- #  if !defined(BOOKDIR)
--#    define     BOOKDIR        "."
-+#    define     BOOKDIR        "/usr/lib/games/crafty"
- #  endif
- #  if !defined(LOGDIR)
- #    define      LOGDIR        "."
- #  endif
- #  if !defined(TBDIR)
--#    define       TBDIR     "./TB"
-+#    define       TBDIR     "/usr/games/lib/crafty/TB"
- #  endif
- #  if !defined(RCDIR)
- #    define       RCDIR        "."
+ #  define SPEAK ".\\Speak.exe "
+ #endif
