@@ -23,6 +23,8 @@ Patch1:		%{name}-Makefile.patch
 Patch2:		%{name}-MDK.patch
 URL:		http://www.limunltd.com/crafty/
 BuildRequires:	libstdc++-devel
+BuildRequires:	sed >= 4.0
+BuildRequires:	unzip
 Provides:	chessprogram
 Provides:	chess_backend
 Suggests:	xboard
@@ -51,7 +53,7 @@ mv bitmaps/README.bitmaps .
 rm -f bitmaps/gifs.tar
 cp %{SOURCE1} %{SOURCE2} .
 
-%{__perl} -pi -e 's@.*machine/builtins.*@@' chess.h
+sed 's@.*machine/builtins.*@@' -i chess.h
 
 %build
 asmobj=""
