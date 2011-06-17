@@ -17,7 +17,9 @@ Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
 Source3:	%{name}.desktop
 Source4:	xchess.png
 Source5:	%{name}-misc.tar.bz2
+# Source5-md5:	28072241d4978a532ac3ef536b02557c
 Source6:	%{name}-bitmaps.tar.gz
+# Source6-md5:	e3e94a914f02dfe8b237b1de7376749e
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
 Patch2:		%{name}-MDK.patch
