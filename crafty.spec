@@ -4,14 +4,14 @@
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl.UTF-8):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
-Version:	20.1
+Version:	23.4
 Release:	1
 License:	GPL
 Group:		Applications/Games
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.zip
-# Source0-md5:	1d88571c150544c3ed25247127bfc5bd
+# Source0-md5:	7e0811dd2d801428d8da48a4e487885a
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
-# NoSource1-md5:	5fd73027a1de1674763562e1987197ba
+# NoSourceSource1-md5:	5fd73027a1de1674763562e1987197ba
 Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
 # Source2-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Source3:	%{name}.desktop
@@ -20,9 +20,11 @@ Source5:	%{name}-misc.tar.bz2
 # Source5-md5:	28072241d4978a532ac3ef536b02557c
 Source6:	%{name}-bitmaps.tar.gz
 # Source6-md5:	e3e94a914f02dfe8b237b1de7376749e
+Source7:	ftp://ftp.cis.uab.edu/pub/hyatt/book/book.bin
+# Source7-md5:	6d527840579904bf0e0b0a456a580a9b
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-Makefile.patch
-Patch2:		%{name}-MDK.patch
+Patch2:		%{name}-security.patch
 URL:		http://www.limunltd.com/crafty/
 BuildRequires:	libstdc++-devel
 BuildRequires:	sed >= 4.0
@@ -46,14 +48,15 @@ często wygrywa z GNU Chess na tym samym sprzęcie.
 
 %prep
 %setup -q -a5 -a6
-%patch0 -p1
-%patch1 -p1
+%patch0 -p0
+%patch1 -p0
 %patch2 -p0
 mv doc/read.me README
 mv doc/* .
 mv bitmaps/README.bitmaps .
 rm -f bitmaps/gifs.tar
 cp %{SOURCE1} %{SOURCE2} .
+cp %{SOURCE7} .
 
 sed 's@.*machine/builtins.*@@' -i chess.h
 
@@ -78,8 +81,7 @@ target="ALPHA"
 	asm="$asmobj"
 
 sh make_books
-# use large opening book
-mv large_book.bin book.bin
+#mv large_book.bin book.bin
 
 %install
 rm -rf $RPM_BUILD_ROOT
