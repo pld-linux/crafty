@@ -1,29 +1,38 @@
---- ./chess.h.org	2007-11-18 11:40:45.390602131 +0100
-+++ ./chess.h	2007-11-18 11:42:18.652054921 +0100
-@@ -131,7 +131,7 @@
- #  define UNIX          /* system is unix-based                       */
- #endif
- #if !defined(BOOKDIR)
--#  define     BOOKDIR        "."
-+#  define     BOOKDIR        "/usr/share/crafty"
- #endif
- #if !defined(PERSDIR)
- #  define     PERSDIR        "."
-@@ -140,7 +140,7 @@
- #  define      LOGDIR        "."
- #endif
- #if !defined(TBDIR)
--#  define       TBDIR     "./TB"
-+#  define       TBDIR     "/usr/share/crafty/TB"
- #endif
- #if !defined(RCDIR)
- #  define       RCDIR        "."
-@@ -1072,7 +1072,7 @@ extern void WinFreeInterleaved(void *, s
- #  include "inlinex86.h"
- #endif
- #if defined(UNIX)
--#  define SPEAK "./speak "
-+#  define SPEAK "/usr/bin/crafty-speak "
- #else
- #  define SPEAK ".\\Speak.exe "
- #endif
+--- chess.h.org	2010-11-08 19:07:43.000000000 +0100
++++ chess.h	2012-05-07 20:13:11.000000000 +0200
+@@ -110,13 +110,13 @@
+ #    define UNIX        /* system is unix-based                       */
+ #  endif
+ #  if !defined(BOOKDIR)
+-#    define     BOOKDIR        "."
++#    define     BOOKDIR        "/usr/share/crafty"
+ #  endif
+ #  if !defined(LOGDIR)
+ #    define      LOGDIR        "."
+ #  endif
+ #  if !defined(TBDIR)
+-#    define       TBDIR     "./TB"
++#    define       TBDIR     "/usr/share/crafty/TB"
+ #  endif
+ #  if !defined(RCDIR)
+ #    define       RCDIR        "."
+@@ -684,7 +684,7 @@
+ #    include "inline32.h"
+ #  endif
+ #  if defined(UNIX)
+-#    define SPEAK "./speak "
++#    define SPEAK "/usr/bin/crafty-speak "
+ #  else
+ #    define SPEAK ".\\Speak.exe "
+ #  endif
+--- option.c.orig	2010-03-04 03:11:14.000000000 +0100
++++ option.c	2010-03-06 22:15:00.000000000 +0100
+@@ -1038,7 +1038,7 @@
+     char *readstat = (char *) -1;
+     int lines = 0;
+ 
+-    helpfile = fopen("crafty.hlp", "r");
++    helpfile = fopen("/usr/share/crafty/crafty.hlp", "r");
+     if (!helpfile) {
+       printf("ERROR.  Unable to open \"crafty.hlp\" -- help unavailable\n");
+       return (1);
