@@ -11,7 +11,7 @@ Group:		Applications/Games
 Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.zip
 # Source0-md5:	7e0811dd2d801428d8da48a4e487885a
 Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
-# NoSourceSource1-md5:	5fd73027a1de1674763562e1987197ba
+# NoSource1-md5:	5fd73027a1de1674763562e1987197ba
 Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
 # Source2-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
 Source3:	%{name}.desktop
