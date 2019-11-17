@@ -1,30 +1,28 @@
---- chess.h.org	2010-11-08 19:07:43.000000000 +0100
-+++ chess.h	2012-05-07 20:13:11.000000000 +0200
-@@ -110,13 +110,13 @@
- #    define UNIX        /* system is unix-based                       */
+--- chess.h.orig	2019-11-14 18:45:24.015435698 +0100
++++ chess.h	2019-11-14 18:52:10.289901387 +0100
+@@ -62,17 +62,20 @@
+ #    endif
  #  endif
  #  if !defined(BOOKDIR)
--#    define     BOOKDIR        "."
-+#    define     BOOKDIR        "/usr/share/crafty"
+-#    define   BOOKDIR      "."
++#    define   BOOKDIR      "/usr/share/crafty"
  #  endif
  #  if !defined(LOGDIR)
- #    define      LOGDIR        "."
+ #    define   LOGDIR       "."
  #  endif
  #  if !defined(TBDIR)
--#    define       TBDIR     "./TB"
-+#    define       TBDIR     "/usr/share/crafty/TB"
+-#    define   TBDIR        "./syzygy"
++#    define   TBDIR        "/usr/share/crafty/syzygy"
  #  endif
  #  if !defined(RCDIR)
- #    define       RCDIR        "."
-@@ -684,7 +684,7 @@
- #    include "inline32.h"
+ #    define   RCDIR        "."
  #  endif
- #  if defined(UNIX)
--#    define SPEAK "./speak "
-+#    define SPEAK "/usr/bin/crafty-speak "
- #  else
- #    define SPEAK ".\\Speak.exe "
- #  endif
++#  if !defined(SPEAK_CMD)
++#    define SPEAK_CMD        "/usr/bin/crafty-speak"
++#  endif
+ #  include "lock.h"
+ #  define MAXPLY                                 129
+ #  define MAX_TC_NODES                       3000000
 --- option.c.orig	2010-03-04 03:11:14.000000000 +0100
 +++ option.c	2010-03-06 22:15:00.000000000 +0100
 @@ -1038,7 +1038,7 @@
@@ -36,3 +34,123 @@
      if (!helpfile) {
        printf("ERROR.  Unable to open \"crafty.hlp\" -- help unavailable\n");
        return (1);
+--- analyze.c.orig	2019-11-14 18:56:09.495272167 +0100
++++ analyze.c	2019-11-14 18:56:11.901925796 +0100
+@@ -146,10 +146,7 @@
+         Print(32, "%s\n", outmove);
+         if (speech) {
+           char announce[64];
+-
+-          strcpy(announce, "./speak ");
+-          strcat(announce, outmove);
+-          strcat(announce, " &");
++	  snprintf(announce, sizeof(announce), "%s %s &", SPEAK_CMD, outmove);
+           v = system(announce);
+           if (v != 0)
+             perror("Analyze() system() error: ");
+--- main.c.orig	2016-10-27 22:11:42.000000000 +0200
++++ main.c	2019-11-14 19:06:40.188522076 +0100
+@@ -4698,8 +4698,7 @@
+           if (audible_alarm)
+             printf("%c", audible_alarm);
+           if (speech) {
+-            strcpy(announce, "./speak ");
+-            strcat(announce, "Drawaccept");
++            snprintf(announce, sizeof(announce), "%s Drawaccept", SPEAK_CMD);
+             v = system(announce);
+             if (v != 0)
+               perror("main() system() error: ");
+@@ -4711,8 +4710,7 @@
+         if (!xboard) {
+           Print(1, "Draw declined.\n");
+           if (speech) {
+-            strcpy(announce, "./speak ");
+-            strcat(announce, "Drawdecline");
++            snprintf(announce, sizeof(announce), "%s Drawdecline", SPEAK_CMD);
+             v = system(announce);
+             if (v != 0)
+               perror("main() system() error: ");
+@@ -4748,8 +4746,7 @@
+           strcpy(pgn_result, "1-0");
+         }
+         if (speech) {
+-          strcpy(announce, "./speak ");
+-          strcat(announce, "Checkmate");
++          snprintf(announce, sizeof(announce), "%s Checkmate", SPEAK_CMD);
+           v = system(announce);
+           if (v != 0)
+             perror("main() system() error: ");
+@@ -4759,8 +4756,7 @@
+         if (!xboard) {
+           Print(1, "stalemate\n");
+           if (speech) {
+-            strcpy(announce, "./speak ");
+-            strcat(announce, "Stalemate");
++            snprintf(announce, sizeof(announce), "%s Stalemate", SPEAK_CMD);
+             v = system(announce);
+             if (v != 0)
+               perror("main() system() error: ");
+@@ -4802,9 +4798,7 @@
+       if (speech) {
+         char *moveptr = OutputMove(tree, 0, game_wtm, last_pv.path[1]);
+ 
+-        strcpy(announce, "./speak ");
+-        strcat(announce, moveptr);
+-        strcat(announce, " &");
++        snprintf(announce, sizeof(announce), "%s %s &", SPEAK_CMD, moveptr);
+         v = system(announce);
+         if (v != 0)
+           perror("main() system() error: ");
+--- resign.c.orig	2016-10-27 22:11:42.000000000 +0200
++++ resign.c	2019-11-14 19:08:06.374721832 +0100
+@@ -109,8 +109,7 @@
+     if (speech) {
+       char announce[128];
+ 
+-      strcpy(announce, "./speak ");
+-      strcat(announce, "Resign");
++      snprintf(announce, sizeof(announce), "%s Resign", SPEAK_CMD);
+       v = system(announce);
+       if (v <= 0)
+         perror("ResignOrDraw() system() error: ");
+@@ -132,8 +131,7 @@
+       if (speech) {
+         char announce[128];
+ 
+-        strcpy(announce, "./speak ");
+-        strcat(announce, "Drawoffer");
++        snprintf(announce, sizeof(announce), "%s Drawoffer", SPEAK_CMD);
+         v = system(announce);
+         if (v <= 0)
+           perror("ResignOrDraw() system() error: ");
+--- annotate.c.orig	2016-10-27 22:11:42.000000000 +0200
++++ annotate.c	2019-11-15 21:38:33.684414406 +0100
+@@ -557,7 +557,7 @@
+   fprintf(annotate_out, "</HTML>\n");
+ }
+ void AnnotatePositionHTML(TREE * RESTRICT tree, int wtm, FILE * annotate_out) {
+-  char filename[32], html_piece;
++  char filename[64], html_piece;
+   char alt[32];
+   int rank, file;
+ 
+@@ -567,7 +567,7 @@
+   for (rank = RANK8; rank >= RANK1; rank--) {
+     fprintf(annotate_out, "<TR>\n");
+     for (file = FILEA; file <= FILEH; file++) {
+-      strcpy(filename, "bitmaps/");
++      strcpy(filename, "/usr/share/crafty/bitmaps/");
+       if ((rank + file) % 2)
+         strcat(filename, "w");
+       else
+--- make_books.orig	2003-02-15 13:10:34.000000000 +0100
++++ make_books	2019-11-15 19:08:06.169987317 +0100
+@@ -7,4 +7,7 @@
+ echo "books create start.pgn 60" | ./crafty 
+ 
+ # create book.bin (opening book)
+-echo "book create small.txt 60 3" | ./crafty
++echo "book create book.pgn 60 3" | ./crafty
++
++# create bookc.bin (computer opening book)
++echo "bookc create startc.pgn 60 3" | ./crafty

@@ -1,0 +1,11 @@
+--- option.c.orig	2019-11-15 20:09:00.500190110 +0100
++++ option.c	2019-11-15 21:39:46.887351164 +0100
+@@ -1404,7 +1404,7 @@
+           nargs--;
+           targs++;
+         } else
+-          printf("error, name must be preceeded by +/- flag.\n");
++          printf("error, name must be preceded by +/- flag.\n");
+         nargs--;
+         targs++;
+       }

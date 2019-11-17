@@ -1,0 +1,15 @@
+--- tbprobe.c.orig	2016-10-27 22:11:42.000000000 +0200
++++ tbprobe.c	2019-11-14 21:37:58.862672013 +0100
+@@ -108,8 +108,12 @@
+ #define board(s)                ((uint64_t)1 << (s))
+ static inline unsigned _lsb(uint64_t b) {
++#ifdef __x86_64__
+   size_t idx;
+ __asm__("bsfq %1, %0": "=r"(idx):"rm"(b));
+   return idx;
++#else
++  return ffsll(b) - 1;
++#endif
+ }
+ 
+ #define square(r, f)            (8 * (r) + (f))

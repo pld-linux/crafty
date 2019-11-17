@@ -1,30 +1,18 @@
---- main.c.orig	2010-03-04 03:12:14.000000000 +0100
-+++ main.c	2010-03-06 22:34:46.000000000 +0100
-@@ -3888,7 +3888,10 @@
-   if (argc > 1) {
+--- main.c.orig	2019-11-15 20:01:15.292710356 +0100
++++ main.c	2019-11-15 20:08:22.987060003 +0100
+@@ -4308,7 +4308,10 @@
      for (i = 1; i < argc; i++) {
-       if (strstr(argv[i], "path") || strstr(argv[i], "log")) {
+       if (strstr(argv[i], "path") || strstr(argv[i], "log") ||
+           strstr(argv[1], "affinity")) {
 -        strcpy(buffer, argv[i]);
-+       //This is a security flaw (see http://bugs.debian.org/203541
-+       //strcpy(buffer, argv[i]);
-+       memset(buffer,'\0',sizeof(buffer));
++        //This is a security flaw (see http://bugs.debian.org/203541
++        //strcpy(buffer, argv[i]);
++        memset(buffer,'\0',sizeof(buffer));
 +        strncpy(buffer,argv[i],sizeof(buffer)-1);
          result = Option(tree);
          if (result == 0)
-           printf("ERROR \"%s\" is unknown command-line option\n", buffer);
-@@ -3967,7 +3970,10 @@
-     for (i = 1; i < argc; i++)
-       if (strcmp(argv[i], "c"))
-         if (!strstr(argv[i], "path")) {
--          strcpy(buffer, argv[i]);
-+         //This is a security flaw (see http://bugs.debian.org/203541
-+         //strcpy(buffer, argv[i]);
-+         memset(buffer,'\0',sizeof(buffer));
-+          strncpy(buffer,argv[i],sizeof(buffer)-1);
-           result = Option(tree);
-           if (result == 0)
-             printf("ERROR \"%s\" is unknown command-line option\n", buffer);
-@@ -3996,11 +4002,16 @@
+           Print(2048, "ERROR \"%s\" is unknown command-line option\n",
+@@ -4328,11 +4331,16 @@
   */
  #if defined(UNIX)
    input_stream = fopen(".craftyrc", "r");
@@ -42,4 +30,3 @@
    if (input_stream)
  #else
    sprintf(crafty_rc_file_spec, "%s/crafty.rc", rc_path);
-

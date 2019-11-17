@@ -1,31 +1,33 @@
 # TODO:
-# - update to 21.6
 # - executable should be sgid games?
 Summary:	Superior chess program by Bob Hyatt for Unix systems
 Summary(pl.UTF-8):	Jeden z lepszych programów szachowych dla uniksów autorstwa Boba Hyatta
 Name:		crafty
-Version:	23.4
+Version:	25.2
 Release:	1
-License:	GPL
+License:	Personal use only (see COPYRIGHT)
 Group:		Applications/Games
-Source0:	ftp://ftp.cis.uab.edu/pub/hyatt/source/%{name}-%{version}.zip
-# Source0-md5:	7e0811dd2d801428d8da48a4e487885a
-Source1:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ascii
-# NoSource1-md5:	5fd73027a1de1674763562e1987197ba
-Source2:	ftp://ftp.cis.uab.edu/pub/hyatt/documentation/%{name}.doc.ps
-# Source2-md5:	6cef69aa2f9ea1ceb74b6c14edc8291f
-Source3:	%{name}.desktop
-Source4:	xchess.png
+Source0:	http://www.craftychess.com/downloads/source/%{name}-%{version}.zip
+# Source0-md5:	d8ad87d9b0fc39a437595203d7b302fc
+Source1:	http://www.craftychess.com/documentation/craftydoc.html
+# Source1-md5:	584ef65843016328d67a7c9df4007e87
+Source2:	http://www.craftychess.com/downloads/book/book.pgn.gz
+# Source2-md5:	05efad71289b2d328da5110df4a19f85
+Source3:	http://www.craftychess.com/downloads/book/start.pgn.gz
+# Source3-md5:	880279c223dc34164837a351faafe2f0
+Source4:	http://www.craftychess.com/downloads/book/startc.pgn.gz
+# Source4-md5:	7a53d5f09d2baa5e7f0df4ee81961cfb
 Source5:	%{name}-misc.tar.bz2
 # Source5-md5:	28072241d4978a532ac3ef536b02557c
 Source6:	%{name}-bitmaps.tar.gz
 # Source6-md5:	e3e94a914f02dfe8b237b1de7376749e
-Source7:	ftp://ftp.cis.uab.edu/pub/hyatt/book/book.bin
-# Source7-md5:	6d527840579904bf0e0b0a456a580a9b
+Source7:	%{name}.desktop
+Source8:	xchess.png
 Patch0:		%{name}-paths.patch
-Patch1:		%{name}-Makefile.patch
-Patch2:		%{name}-security.patch
-URL:		http://www.limunltd.com/crafty/
+Patch1:		%{name}-security.patch
+Patch2:		%{name}-portable.patch
+Patch3:		%{name}-spelling.patch
+URL:		http://www.craftychess.com/
 BuildRequires:	libstdc++-devel
 BuildRequires:	sed >= 4.0
 BuildRequires:	unzip
@@ -47,41 +49,33 @@ Crafty to uniksowy program szachowy rozpowszechniany w postaci
 często wygrywa z GNU Chess na tym samym sprzęcie.
 
 %prep
-%setup -q -a5 -a6
+%setup -q -c -a5 -a6
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
-mv doc/read.me README
-mv doc/* .
-mv bitmaps/README.bitmaps .
-rm -f bitmaps/gifs.tar
-cp %{SOURCE1} %{SOURCE2} .
-cp %{SOURCE7} .
+%patch3 -p0
+%{__mv} doc/read.me README
+%{__mv} doc/* .
+%{__mv} bitmaps/README.bitmaps .
+%{__rm} bitmaps/gifs.tar
+cp -p %{SOURCE1} .
+zcat %{SOURCE2} > book.pgn
+zcat %{SOURCE3} > start.pgn
+zcat %{SOURCE4} > startc.pgn
 
-sed 's@.*machine/builtins.*@@' -i chess.h
+%{__sed} -ne '/Crafty, copyright/,/ as stated previously/ p' main.c > COPYRIGHT
+%{__sed} -ne '/version  description/,/^\*\*\*/ p; /^ \*\// q' main.c > ChangeLog
 
 %build
-asmobj=""
-optarch=""
-target="LINUX"
-%ifarch %{ix86}
-optarch="-DUSE_ASSEMBLY_A -DUSE_ASSEMBLY_B"
-asmobj="X86-elf.o"
-%endif
-%ifarch alpha
-target="ALPHA"
-%endif
 %{__make} crafty-make \
-	target="$target" \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags} -Wall -pipe -D_REENTRANT" \
-	LDFLAGS="%{rpmldflags} -lpthread" \
-	opt="-DCOMPACT_ATTACKS -DUSE_ATTACK_FUNCTIONS $optarch -DFAST" \
-	asm="$asmobj"
+	LDFLAGS="%{rpmldflags} -pthread" \
+	opt="-DCPUS=4 -DSYZYGY" \
+	target=UNIX
 
 sh make_books
-#mv large_book.bin book.bin
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -92,15 +86,15 @@ install crafty $RPM_BUILD_ROOT%{_bindir}
 install xcrafty $RPM_BUILD_ROOT%{_bindir}
 install speak $RPM_BUILD_ROOT%{_bindir}/crafty-speak
 
-install book.bin books.bin crafty.hlp $RPM_BUILD_ROOT%{_datadir}/%{name}
-install bitmaps/* $RPM_BUILD_ROOT%{_datadir}/%{name}/bitmaps
-install tb/*.emd $RPM_BUILD_ROOT%{_datadir}/%{name}/tb
+cp -p book.bin bookc.bin books.bin crafty.hlp $RPM_BUILD_ROOT%{_datadir}/%{name}
+cp -p bitmaps/* $RPM_BUILD_ROOT%{_datadir}/%{name}/bitmaps
+cp -p tb/*.emd $RPM_BUILD_ROOT%{_datadir}/%{name}/tb
 
-install crafty.6 $RPM_BUILD_ROOT%{_mandir}/man6
+cp -p crafty.6 $RPM_BUILD_ROOT%{_mandir}/man6
 echo ".so crafty.6" > $RPM_BUILD_ROOT%{_mandir}/man6/xcrafty.6
 
-install %{SOURCE3} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE4} $RPM_BUILD_ROOT%{_pixmapsdir}
+cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_desktopdir}
+cp -p %{SOURCE8} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 touch $RPM_BUILD_ROOT/var/lib/%{name}/book.lrn \
 	$RPM_BUILD_ROOT/var/lib/%{name}/position.{bin,lrn}
@@ -114,8 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc crafty.doc* crafty.faq README* small.txt start.pgn tournament.howto
-%attr(755,root,root) %{_bindir}/crafty*
+%doc COPYRIGHT ChangeLog README* crafty.doc crafty.faq craftydoc.html tournament.howto
+%attr(755,root,root) %{_bindir}/crafty
+%attr(755,root,root) %{_bindir}/crafty-speak
 %attr(755,root,root) %{_bindir}/xcrafty
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.bin
@@ -130,6 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/book.lrn
 %attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/position.bin
 %attr(660,root,games) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/position.lrn
-%{_mandir}/man6/*.6*
-%{_desktopdir}/*.desktop
-%{_pixmapsdir}/*
+%{_mandir}/man6/crafty.6*
+%{_mandir}/man6/xcrafty.6*
+%{_desktopdir}/crafty.desktop
+%{_pixmapsdir}/xchess.png
