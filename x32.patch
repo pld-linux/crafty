@@ -1,0 +1,11 @@
+--- crafty-25.2/tbprobe.c~	2020-03-27 22:38:46.000000000 +0100
++++ crafty-25.2/tbprobe.c	2020-03-27 22:39:45.477080526 +0100
+@@ -107,7 +107,7 @@
+ #define file(s)                 ((s) & 0x07)
+ #define board(s)                ((uint64_t)1 << (s))
+ static inline unsigned _lsb(uint64_t b) {
+-#ifdef __x86_64__
++#if defined(__x86_64__) && !defined(__ILP32__)
+   size_t idx;
+ __asm__("bsfq %1, %0": "=r"(idx):"rm"(b));
+   return idx;

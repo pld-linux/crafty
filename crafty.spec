@@ -27,6 +27,7 @@ Patch0:		%{name}-paths.patch
 Patch1:		%{name}-security.patch
 Patch2:		%{name}-portable.patch
 Patch3:		%{name}-spelling.patch
+Patch4:		x32.patch
 URL:		http://www.craftychess.com/
 BuildRequires:	libstdc++-devel
 BuildRequires:	sed >= 4.0
@@ -54,6 +55,7 @@ często wygrywa z GNU Chess na tym samym sprzęcie.
 %patch1 -p0
 %patch2 -p0
 %patch3 -p0
+%patch4 -p1
 %{__mv} doc/read.me README
 %{__mv} doc/* .
 %{__mv} bitmaps/README.bitmaps .
