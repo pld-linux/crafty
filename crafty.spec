@@ -51,11 +51,11 @@ często wygrywa z GNU Chess na tym samym sprzęcie.
 
 %prep
 %setup -q -c -a5 -a6
-%patch0 -p0
-%patch1 -p0
-%patch2 -p0
-%patch3 -p0
-%patch4 -p1
+%patch -P0 -p0
+%patch -P1 -p0
+%patch -P2 -p0
+%patch -P3 -p0
+%patch -P4 -p1
 %{__mv} doc/read.me README
 %{__mv} doc/* .
 %{__mv} bitmaps/README.bitmaps .
